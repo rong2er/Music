@@ -19,7 +19,7 @@ jobs:
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./ 
-        server-dir: ${{ secrets.FTP_REMOTE_DIR }}
+        server-dir: ${{ secrets.FTP_REMOTE_DIR }}/  # 加尾 /，表示目录
         exclude: |
           **/.git*
           **/.github/**
@@ -27,4 +27,4 @@ jobs:
           .gitignore
           LICENSE
           node_modules/**
-        dry-run: false  # 可先设 true 测试（不实际上传）
+        dry-run: false
