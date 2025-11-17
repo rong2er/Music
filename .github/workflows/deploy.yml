@@ -1,31 +1,30 @@
-name: Deploy to InfinityFree  # 工作流名称（Actions 页面显示）
+name: Deploy to InfinityFree
 
 on:
   push:
-    branches: [ main ]  # 触发：推送到 main 分支时自动运行（如果你的主分支是 master，改成 master）
+    branches: [ main ]
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest  # 运行环境：Linux 虚拟机（免费）
+    runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code  # 步骤1: 拉取最新代码
-      uses: actions/checkout@v4  # GitHub 官方工具，拉取整个 repo
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-    - name: Deploy to FTP  # 步骤2: FTP 上传到 InfinityFree
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.5  # 可靠 FTP Action
+    - name: Deploy to FTP
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
-        server: ${{ secrets.FTP_SERVER }}  # 读取 Secrets 的 Host
-        username: ${{ secrets.FTP_USERNAME }}  # 用户名
-        password: ${{ secrets.FTP_PASSWORD }}  # 密码
-        local-dir: ./  # 本地目录：repo 根（YL-Music 文件，如 index.html、proxy.php）
-        server-dir: ${{ secrets.FTP_REMOTE_DIR }}  # 远程目录：/htdocs
-        exclude: |  # 排除无用文件（加速上传，节省时间）
-          **/.git*          # Git 历史
-          **/.github/**     # Actions 文件夹
-          README.md         # 文档
-          .gitignore        # Git 配置
-          LICENSE           # 许可文件
-          node_modules/**   # 如果有 Node 依赖（YL-Music 无）
-        dry-run: false  # 实际上传（false=部署，true=测试模式，可先试 true）
-        force-ssl: false  # FTP 非 SSL（InfinityFree 默认）
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        local-dir: ./ 
+        server-dir: ${{ secrets.FTP_REMOTE_DIR }}
+        exclude: |
+          **/.git*
+          **/.github/**
+          README.md
+          .gitignore
+          LICENSE
+          node_modules/**
+        dry-run: false  # 可先设 true 测试（不实际上传）
