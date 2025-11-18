@@ -12,19 +12,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: FTP Deploy
-      uses: SamKirkland/FTP-Deploy-Action@4.3.4   # 降级到 4.3.4，最稳版本
+    - name: Deploy to FTP
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        server-dir: /htdocs/                         # 直接写死，彻底避免 Secrets 尾巴问题
-        protocol: ftps                               # 强制 FTPS
-        port: 21
-        dangerous-clean-slate: true                  # 删除同步
+        local-dir: ./ 
+        server-dir: ${{ secrets.FTP_REMOTE_DIR }}/  # 加尾 /，表示目录
         exclude: |
           **/.git*
           **/.github/**
           README.md
           .gitignore
           LICENSE
+          node_modules/**
+        dry-run: false
