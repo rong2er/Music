@@ -2,7 +2,7 @@ name: Deploy to InfinityFree
 
 on:
   push:
-    branches: [ main ]   # 改成你的主分支
+    branches: [ main ]   # 如果你的主分支叫 master，请改成 master
 
 jobs:
   deploy:
@@ -12,15 +12,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Deploy with FTPS
-      uses: SebastienRien/ftp-deploy-action@v2.0.0   # 正确的仓库名
+    - name: Deploy with FTPS (Stable)
+      uses: sebastienne/ftp-deploy-action@v2.0.0   # 正确仓库名！！！
       with:
         ftp_host: ${{ secrets.FTP_SERVER }}          # ftpupload.net
         ftp_username: ${{ secrets.FTP_USERNAME }}
         ftp_password: ${{ secrets.FTP_PASSWORD }}
         local_dir: ./                                # 本地根目录
-        remote_dir: ${{ secrets.FTP_REMOTE_DIR }}/   # /htdocs/ 必须尾 /
-        delete: "true"                               # 同步删除远程多余文件
+        remote_dir: ${{ secrets.FTP_REMOTE_DIR }}/   # /htdocs/ 必须尾巴有 /
+        delete: "true"                               # 删除远程多余文件
         exclude: |
           **/.git*
           **/.github/**
