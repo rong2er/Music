@@ -2,7 +2,11 @@ name: Deploy to InfinityFree
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main ]          # 如果你的主分支叫 master，请改成 master
+  # 可选：PR 合并时也触发
+  # pull_request:
+  #   types: [closed]
+  #   branches: [ main ]
 
 jobs:
   deploy:
@@ -11,15 +15,17 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0           # 完整历史，更好的增量比较
 
     - name: Deploy to FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
-        server: ${{ secrets.FTP_SERVER }}
-        username: ${{ secrets.FTP_USERNAME }}
+        server: ${{ secrets.FTP_SERVER }}          # ftpupload.net
+        username: ${{ secrets.FTP_USERNAME }}      # ep1ss_xxxxx
         password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: ./ 
-        server-dir: ${{ secrets.FTP_REMOTE_DIR }}/  # 加尾 /，表示目录
+        local-dir: ./                              # 本地根目录（所有 YL-Music 文件）
+        server-dir: ${{ secrets.FTP_REMOTE_DIR }}/ # 远程目录，必须以 / 结尾
         exclude: |
           **/.git*
           **/.github/**
@@ -27,4 +33,7 @@ jobs:
           .gitignore
           LICENSE
           node_modules/**
-        dry-run: false
+        dangerous-clean-slate: true   # 关键：让远程和本地完全一致（删除多余文件）
+        dry-run: false                # false=真正上传，true=只模拟（调试用）
+        log-level: minimal            # 日志简洁一点
+        timeout: 300                  # 超时时间 5 分钟，防止卡住
